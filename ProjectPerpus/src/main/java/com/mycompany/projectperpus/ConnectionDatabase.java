@@ -13,7 +13,7 @@ import java.sql.SQLException;
  * @author Septiancesare
  */
 public class ConnectionDatabase {
-     String url = "jdbc:mysql://localhost:3306/percobaan";
+     String url = "jdbc:mysql://localhost:3306/sistemadminperpus";
     String username = "root";
     String password = "";
     
