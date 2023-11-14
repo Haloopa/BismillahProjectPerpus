@@ -15,11 +15,5 @@ public class ProjectPerpus {
 
     public static void main(String[] args) throws SQLException {
         System.out.println("Hello World!");
-        ConnectionDatabase connecttion = ConnectionDatabase.getInstance();
-        Connection connect = connecttion.getConnection();
-        
-        System.out.println("Koneksi Berhasil");
-        
-        
     }
 }

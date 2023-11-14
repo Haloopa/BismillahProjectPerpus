@@ -29,7 +29,7 @@ public class framePengembalian extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         inputNoUrut = new javax.swing.JTextField();
-        InputIdPetugas = new javax.swing.JTextField();
+        inputIdPetugas = new javax.swing.JTextField();
         inputIdAnggota = new javax.swing.JTextField();
         inputNamaAnggota = new javax.swing.JTextField();
         inputIdBuku = new javax.swing.JTextField();
@@ -54,11 +54,11 @@ public class framePengembalian extends javax.swing.JFrame {
         inputNoUrut.setBorder(null);
         jPanel1.add(inputNoUrut, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 410, 40));
 
-        InputIdPetugas.setBackground(new java.awt.Color(222, 217, 186));
-        InputIdPetugas.setFont(new java.awt.Font("Century", 0, 18)); // NOI18N
-        InputIdPetugas.setForeground(new java.awt.Color(125, 39, 34));
-        InputIdPetugas.setBorder(null);
-        jPanel1.add(InputIdPetugas, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 410, 30));
+        inputIdPetugas.setBackground(new java.awt.Color(222, 217, 186));
+        inputIdPetugas.setFont(new java.awt.Font("Century", 0, 18)); // NOI18N
+        inputIdPetugas.setForeground(new java.awt.Color(125, 39, 34));
+        inputIdPetugas.setBorder(null);
+        jPanel1.add(inputIdPetugas, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 410, 30));
 
         inputIdAnggota.setBackground(new java.awt.Color(222, 217, 186));
         inputIdAnggota.setFont(new java.awt.Font("Century", 0, 18)); // NOI18N
@@ -145,6 +145,11 @@ public class framePengembalian extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
+        tabelPengembalian.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelPengembalianMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabelPengembalian);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 477, 1300, 260));
@@ -174,6 +179,34 @@ public class framePengembalian extends javax.swing.JFrame {
         menu.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnKeluarActionPerformed
+
+    private void tabelPengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelPengembalianMouseClicked
+        // TODO add your handling code here:
+        int row = tabelPengembalian.getSelectedRow();
+        
+//        if (row == -1){
+//            return;
+//        
+//        }
+        String idPinjam = (String) tabelPengembalian.getValueAt(row, 1);
+        inputNoUrut.setText(idPinjam);
+        
+        String idPetugas = (String) tabelPengembalian.getValueAt(row, 6);
+        inputIdPetugas.setText(idPetugas);
+        
+        String idAnggota = (String) tabelPengembalian.getValueAt(row, 3);
+        inputIdAnggota.setText(idAnggota);
+        
+        String namaAnggota = (String) tabelPengembalian.getValueAt(row, 4);
+        inputNamaAnggota.setText(namaAnggota);
+        
+        String idBuku = (String) tabelPengembalian.getValueAt(row, 5);
+        inputIdBuku.setText(idBuku);
+        
+        String judulBuku = (String) tabelPengembalian.getValueAt(row, 9);
+        inputJudulBuku.setText(judulBuku);
+        
+    }//GEN-LAST:event_tabelPengembalianMouseClicked
 
     /**
      * @param args the command line arguments
@@ -212,7 +245,6 @@ public class framePengembalian extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField InputIdPetugas;
     private javax.swing.JLabel TanggalKembali;
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnKeluar;
@@ -220,6 +252,7 @@ public class framePengembalian extends javax.swing.JFrame {
     private javax.swing.JButton btnUbah;
     private javax.swing.JTextField inputIdAnggota;
     private javax.swing.JTextField inputIdBuku;
+    private javax.swing.JTextField inputIdPetugas;
     private javax.swing.JTextField inputJudulBuku;
     private javax.swing.JTextField inputNamaAnggota;
     private javax.swing.JTextField inputNoUrut;
