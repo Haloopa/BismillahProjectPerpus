@@ -3,8 +3,20 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package gui;
+import com.mycompany.projectperpus.ConnectionDatabase;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Septiancesare
@@ -14,8 +26,55 @@ public class framePengembalian extends javax.swing.JFrame {
     /**
      * Creates new form framePengembalian
      */
+    private DefaultTableModel tableModel;
+    
     public framePengembalian() {
         initComponents();
+        
+        tableModel = (DefaultTableModel) tabelPengembalian.getModel();
+
+        // Inisialisasi Timer untuk polling data setiap 5 detik (sesuai kebutuhan)
+        Timer timer = new Timer(5000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                refreshTableData();
+            }
+        });
+        timer.start();
+
+        // Panggil metode pertama kali untuk mengisi data tabel
+        refreshTableData();
+    }
+    
+   private void refreshTableData() {
+        try {
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
+            Connection connect = koneksidatabase.getConnection();
+
+            // Mengambil data dari database
+            String query = "SELECT * FROM pengembalian";
+            try (PreparedStatement statement = connect.prepareStatement(query);
+                 ResultSet resultSet = statement.executeQuery()) {
+
+                // Clear existing data
+                tableModel.setRowCount(0);
+
+                // Populate data from the result set
+                ResultSetMetaData metaData = resultSet.getMetaData();
+                int columnCount = metaData.getColumnCount();
+
+                // Add rows to the model
+                while (resultSet.next()) {
+                    Object[] row = new Object[columnCount];
+                    for (int i = 1; i <= columnCount; i++) {
+                        row[i - 1] = resultSet.getObject(i);
+                    }
+                    tableModel.addRow(row);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     /**
@@ -128,21 +187,28 @@ public class framePengembalian extends javax.swing.JFrame {
 
         tabelPengembalian.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID Pinjam", "ID Pinjam", "ID Buku", "Judul Buku", "ID Anggota", "Nama Anggota", "Tanggal Pengembalian", "Denda", "Jatuh Tempo"
+                "ID Anggota", "Nama Anggota", "ID Buku", "Judul Buku", "ID Petugas", "Tanggal Pengembalian", "Denda", "ID Pinjam", "ID Kembali", "Jatuh Tempo"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         tabelPengembalian.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -170,7 +236,7 @@ public class framePengembalian extends javax.swing.JFrame {
         DateTimeFormatter formatt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String tanggalSekarang = currentime.format(formatt);
         TanggalKembali.setText(tanggalSekarang);
-                
+         
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
@@ -182,12 +248,26 @@ public class framePengembalian extends javax.swing.JFrame {
 
     private void tabelPengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelPengembalianMouseClicked
         // TODO add your handling code here:
+        
+        try {
+            ConnectionDatabase koneksidatabase;
+            koneksidatabase = ConnectionDatabase.getInstance();
+            Connection connect = koneksidatabase.getConnection();
+            
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(framePengembalian.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        
         int row = tabelPengembalian.getSelectedRow();
         
 //        if (row == -1){
 //            return;
 //        
 //        }
+        
+
         String idPinjam = (String) tabelPengembalian.getValueAt(row, 1);
         inputNoUrut.setText(idPinjam);
         

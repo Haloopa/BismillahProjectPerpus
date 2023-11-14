@@ -141,7 +141,7 @@ public class frameLogin extends javax.swing.JFrame {
 
     private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
         // TODO add your handling code here:
-        this.dispose();
+        dialogGagalLogin.setVisible(false); 
     }//GEN-LAST:event_btnOkActionPerformed
 
     /**
