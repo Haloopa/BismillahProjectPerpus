@@ -111,6 +111,11 @@ public class framePengembalian extends javax.swing.JFrame {
         inputNoUrut.setFont(new java.awt.Font("Century", 0, 18)); // NOI18N
         inputNoUrut.setForeground(new java.awt.Color(125, 39, 34));
         inputNoUrut.setBorder(null);
+        inputNoUrut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputNoUrutActionPerformed(evt);
+            }
+        });
         jPanel1.add(inputNoUrut, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 410, 40));
 
         inputIdPetugas.setBackground(new java.awt.Color(222, 217, 186));
@@ -287,6 +292,10 @@ public class framePengembalian extends javax.swing.JFrame {
         inputJudulBuku.setText(judulBuku);
         
     }//GEN-LAST:event_tabelPengembalianMouseClicked
+
+    private void inputNoUrutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputNoUrutActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputNoUrutActionPerformed
 
     /**
      * @param args the command line arguments
