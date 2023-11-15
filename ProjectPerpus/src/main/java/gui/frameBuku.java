@@ -3,7 +3,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package gui;
-
+import com.mycompany.projectperpus.ConnectionDatabase;
+import java.awt.HeadlessException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author acer
@@ -16,6 +24,50 @@ public class frameBuku extends javax.swing.JFrame {
     public frameBuku() {
         initComponents();
     }
+    
+    private void kosongkanForm(){
+        inputIDBuku.setEditable(true);
+        inputJudulBuku.setText(null);
+        inputPenulis.setText(null);
+        inputPenerbit.setText(null);
+        inputTahunTerbit.setText(null);
+        inputRak.setText(null);
+    }
+    
+    private void tampilkanData(){
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("ID Buku");
+        model.addColumn("Judul Buku");
+        model.addColumn("Penulis");
+        model.addColumn("Penerbit");
+        model.addColumn("Tahun Terbit");
+        model.addColumn("Rak");
+        
+        try {
+            int no = 1;
+            String sql = "SELECT * FROM buku WHERE idBuku like '%"
+                    + inputCari.getText() + "%'"
+                    + " or judulBuku '%" + inputJudulBuku.getText()
+                    + "%'" + "penulis '%" + inputPenulis.getText()
+                    + "%'" + "penerbit '%" + inputPenerbit.getText() 
+                    + "%'" + "tahunTerbit '%" + inputTahunTerbit.getText() 
+                    + "%'" + "rak '%" + inputRak.getText()+ "%'"; 
+            ConnectionDatabase koneksidatabase;
+            koneksidatabase = ConnectionDatabase.getInstance();
+            Connection connect = koneksidatabase.getConnection();
+            Statement st = connect.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            
+            while (rs.next()) {
+                model.addRow(new Object[] {no++, rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)});
+                
+                tabelBuku.setModel(model);
+            }
+            JOptionPane.showMessageDialog(null, "Data buku ditemukan!");
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,21 +78,345 @@ public class frameBuku extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jPanel1 = new javax.swing.JPanel();
+        inputIDBuku = new javax.swing.JTextField();
+        inputJudulBuku = new javax.swing.JTextField();
+        inputPenulis = new javax.swing.JTextField();
+        inputPenerbit = new javax.swing.JTextField();
+        inputTahunTerbit = new javax.swing.JTextField();
+        inputRak = new javax.swing.JTextField();
+        inputCari = new javax.swing.JTextField();
+        btnTambah = new javax.swing.JButton();
+        btnUbah = new javax.swing.JButton();
+        btnHapus = new javax.swing.JButton();
+        btnKeluar = new javax.swing.JButton();
+        btnCari = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabelBuku = new javax.swing.JTable();
+        bgBuku = new javax.swing.JLabel();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        inputIDBuku.setBackground(new java.awt.Color(222, 217, 186));
+        inputIDBuku.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        inputIDBuku.setBorder(null);
+        inputIDBuku.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputIDBukuActionPerformed(evt);
+            }
+        });
+        jPanel1.add(inputIDBuku, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 160, 400, 30));
+
+        inputJudulBuku.setBackground(new java.awt.Color(222, 217, 186));
+        inputJudulBuku.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        inputJudulBuku.setBorder(null);
+        inputJudulBuku.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputJudulBukuActionPerformed(evt);
+            }
+        });
+        jPanel1.add(inputJudulBuku, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 240, 400, 30));
+
+        inputPenulis.setBackground(new java.awt.Color(222, 217, 186));
+        inputPenulis.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        inputPenulis.setBorder(null);
+        inputPenulis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputPenulisActionPerformed(evt);
+            }
+        });
+        jPanel1.add(inputPenulis, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 310, 400, 30));
+
+        inputPenerbit.setBackground(new java.awt.Color(222, 217, 186));
+        inputPenerbit.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        inputPenerbit.setBorder(null);
+        inputPenerbit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputPenerbitActionPerformed(evt);
+            }
+        });
+        jPanel1.add(inputPenerbit, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 160, 400, 30));
+
+        inputTahunTerbit.setBackground(new java.awt.Color(222, 217, 186));
+        inputTahunTerbit.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        inputTahunTerbit.setBorder(null);
+        inputTahunTerbit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputTahunTerbitActionPerformed(evt);
+            }
+        });
+        jPanel1.add(inputTahunTerbit, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 240, 400, 30));
+
+        inputRak.setBackground(new java.awt.Color(222, 217, 186));
+        inputRak.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        inputRak.setBorder(null);
+        inputRak.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputRakActionPerformed(evt);
+            }
+        });
+        jPanel1.add(inputRak, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 310, 400, 30));
+
+        inputCari.setBackground(new java.awt.Color(222, 217, 186));
+        inputCari.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        inputCari.setBorder(null);
+        inputCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputCariActionPerformed(evt);
+            }
+        });
+        jPanel1.add(inputCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 370, 430, 50));
+
+        btnTambah.setBackground(new java.awt.Color(125, 39, 34));
+        btnTambah.setFont(new java.awt.Font("Century", 1, 18)); // NOI18N
+        btnTambah.setForeground(new java.awt.Color(255, 204, 0));
+        btnTambah.setText("Tambah");
+        btnTambah.setBorder(null);
+        btnTambah.setPreferredSize(new java.awt.Dimension(57, 17));
+        btnTambah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTambahActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnTambah, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 110, 220, 50));
+
+        btnUbah.setBackground(new java.awt.Color(125, 39, 34));
+        btnUbah.setFont(new java.awt.Font("Century", 1, 18)); // NOI18N
+        btnUbah.setForeground(new java.awt.Color(255, 204, 0));
+        btnUbah.setText("Ubah");
+        btnUbah.setBorder(null);
+        btnUbah.setPreferredSize(new java.awt.Dimension(57, 17));
+        btnUbah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUbahActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnUbah, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 180, 220, 50));
+
+        btnHapus.setBackground(new java.awt.Color(125, 39, 34));
+        btnHapus.setFont(new java.awt.Font("Century", 1, 18)); // NOI18N
+        btnHapus.setForeground(new java.awt.Color(255, 204, 0));
+        btnHapus.setText("Hapus");
+        btnHapus.setBorder(null);
+        btnHapus.setPreferredSize(new java.awt.Dimension(57, 17));
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 250, 220, 50));
+
+        btnKeluar.setBackground(new java.awt.Color(125, 39, 34));
+        btnKeluar.setFont(new java.awt.Font("Century", 1, 18)); // NOI18N
+        btnKeluar.setForeground(new java.awt.Color(255, 204, 0));
+        btnKeluar.setText("Keluar");
+        btnKeluar.setBorder(null);
+        btnKeluar.setPreferredSize(new java.awt.Dimension(57, 17));
+        btnKeluar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKeluarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnKeluar, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 320, 220, 50));
+
+        btnCari.setBackground(new java.awt.Color(125, 39, 34));
+        btnCari.setFont(new java.awt.Font("Century", 1, 18)); // NOI18N
+        btnCari.setForeground(new java.awt.Color(255, 204, 0));
+        btnCari.setText("Cari");
+        btnCari.setBorder(null);
+        btnCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 380, 220, 50));
+
+        tabelBuku.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        tabelBuku.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
+            },
+            new String [] {
+                "ID Buku", "Judul Buku", "Penulis", "Penerbit", "Tahun Terbit", "Rak"
+            }
+        ));
+        tabelBuku.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabelBukuMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabelBuku);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 470, 1300, 260));
+
+        bgBuku.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/DATA BUKU.png"))); // NOI18N
+        jPanel1.add(bgBuku, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void inputIDBukuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputIDBukuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputIDBukuActionPerformed
+
+    private void inputJudulBukuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputJudulBukuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputJudulBukuActionPerformed
+
+    private void inputPenulisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputPenulisActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputPenulisActionPerformed
+
+    private void inputPenerbitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputPenerbitActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputPenerbitActionPerformed
+
+    private void inputTahunTerbitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputTahunTerbitActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputTahunTerbitActionPerformed
+
+    private void inputRakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputRakActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputRakActionPerformed
+
+    private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
+        // TODO add your handling code here:
+        try {
+            String sql = "UPDATE buku SET idBuku= '" + inputIDBuku.getText()
+                    + "' , judulBuku = '" + inputJudulBuku.getText()
+                    + "' , penulis = '" + inputPenulis.getText()
+                    + "' , penerbit = '" + inputPenerbit.getText() 
+                    + "' , tahunTerbit = '" + inputTahunTerbit.getText() 
+                    + "' , rak = '" + inputRak.getText()
+                    + "' WHERE idBuku = '" + inputIDBuku.getSelectedText() + "'"; 
+            ConnectionDatabase koneksidatabase;
+            koneksidatabase = ConnectionDatabase.getInstance();
+            Connection connect = koneksidatabase.getConnection();
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ps.execute();
+            JOptionPane.showMessageDialog(null, "Data buku berhasil diubah!");
+            tampilkanData();
+            kosongkanForm();
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_btnUbahActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        // TODO add your handling code here:
+         try {
+            String sql = "DELETE FROM buku WHERE idBuku = '" + inputIDBuku.getText()+ "'"; 
+            ConnectionDatabase koneksidatabase;
+            koneksidatabase = ConnectionDatabase.getInstance();
+            Connection connect = koneksidatabase.getConnection();
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ps.execute();
+            JOptionPane.showMessageDialog(null, "Data buku berhasil dihapus!");
+            tampilkanData();
+            kosongkanForm();
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
+        // TODO add your handling code here:
+        frameMenu menu = new frameMenu();
+        menu.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnKeluarActionPerformed
+
+    private void inputCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputCariActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputCariActionPerformed
+
+    private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
+        // TODO add your handling code here:
+        try {
+            String sql = "SELECT * FROM buku WHERE idBuku like '%"
+            + inputCari.getText() + "%'"
+            + " or judulBuku'%" + inputJudulBuku.getText()
+            + "%'" + "penulis'%" + inputPenulis.getText()
+            + "%'" + "penerbit '%" + inputPenerbit.getText()
+            + "%'" + "tahunTerbit '%" + inputTahunTerbit.getText()
+            + "%'" + "rak '%" + inputRak.getText() + "%'";
+            ConnectionDatabase koneksidatabase;
+            koneksidatabase = ConnectionDatabase.getInstance();
+            Connection connect = koneksidatabase.getConnection();
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ps.execute();
+            JOptionPane.showMessageDialog(null, "Data buku ditemukan!");
+            tampilkanData();
+            kosongkanForm();
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_btnCariActionPerformed
+
+    private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
+        // TODO add your handling code here:
+        try {
+            String sql = "INSERT INTO buku VALUES ('"+inputIDBuku.getText()+"' , '"+inputJudulBuku.getText()+"' , '"+inputPenulis.getText()+"' , '"+inputPenerbit.getText()+"' , '"+inputTahunTerbit.getText()+"' , '"+inputRak.getText()+"')"; 
+            ConnectionDatabase koneksidatabase;
+            koneksidatabase = ConnectionDatabase.getInstance();
+            Connection connect = koneksidatabase.getConnection();
+            PreparedStatement ps = connect.prepareStatement(sql);
+            ps.execute();
+            JOptionPane.showMessageDialog(null, "Data buku berhasil ditambahkan!");
+            tampilkanData();
+            kosongkanForm();
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_btnTambahActionPerformed
+
+    private void tabelBukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelBukuMouseClicked
+        // TODO add your handling code here:
+         try {
+            ConnectionDatabase koneksidatabase;
+            koneksidatabase = ConnectionDatabase.getInstance();
+            Connection connect = koneksidatabase.getConnection();
+            
+            
+        } catch (HeadlessException | SQLException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+//            
+        
+         int row = tabelBuku.getSelectedRow();
+        
+//        if (row == -1){
+//            return;
+//        
+//        }
+        
+
+       String idBuku = (String) tabelBuku.getValueAt(row, 1);
+        inputIDBuku.setText(idBuku);
+        
+        String judulBuku = (String) tabelBuku.getValueAt(row, 2);
+        inputJudulBuku.setText(judulBuku);
+        
+        String penulis = (String) tabelBuku.getValueAt(row, 3);
+        inputPenulis.setText(penulis);
+        
+        String penerbit = (String) tabelBuku.getValueAt(row, 4);
+        inputPenerbit.setText(penerbit);
+        
+        String tahunTerbit = (String) tabelBuku.getValueAt(row, 5);
+        inputTahunTerbit.setText(tahunTerbit);
+        
+        String rak = (String) tabelBuku.getValueAt(row, 6);
+        inputRak.setText(rak);
+    }//GEN-LAST:event_tabelBukuMouseClicked
 
     /**
      * @param args the command line arguments
@@ -78,5 +454,21 @@ public class frameBuku extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel bgBuku;
+    private javax.swing.JButton btnCari;
+    private javax.swing.JButton btnHapus;
+    private javax.swing.JButton btnKeluar;
+    private javax.swing.JButton btnTambah;
+    private javax.swing.JButton btnUbah;
+    private javax.swing.JTextField inputCari;
+    private javax.swing.JTextField inputIDBuku;
+    private javax.swing.JTextField inputJudulBuku;
+    private javax.swing.JTextField inputPenerbit;
+    private javax.swing.JTextField inputPenulis;
+    private javax.swing.JTextField inputRak;
+    private javax.swing.JTextField inputTahunTerbit;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tabelBuku;
     // End of variables declaration//GEN-END:variables
 }

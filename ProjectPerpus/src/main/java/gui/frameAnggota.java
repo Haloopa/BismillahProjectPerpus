@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package gui;
-
 import com.mycompany.projectperpus.ConnectionDatabase;
 import java.awt.HeadlessException;
 import java.sql.Connection;
@@ -24,6 +23,9 @@ public class frameAnggota extends javax.swing.JFrame {
     /**
      * Creates new form frameAnggota
      */
+    public frameAnggota() {
+        initComponents();
+}
     private void kosongkanForm(){
         inputIDAnggota.setEditable(true);
         inputNamaAnggota.setText(null);
@@ -107,7 +109,6 @@ public class frameAnggota extends javax.swing.JFrame {
 
         inputIDAnggota.setBackground(new java.awt.Color(222, 217, 186));
         inputIDAnggota.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
-        inputIDAnggota.setForeground(new java.awt.Color(255, 204, 0));
         inputIDAnggota.setBorder(null);
         inputIDAnggota.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -118,7 +119,6 @@ public class frameAnggota extends javax.swing.JFrame {
 
         inputNamaAnggota.setBackground(new java.awt.Color(222, 217, 186));
         inputNamaAnggota.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
-        inputNamaAnggota.setForeground(new java.awt.Color(255, 204, 0));
         inputNamaAnggota.setBorder(null);
         inputNamaAnggota.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -129,7 +129,6 @@ public class frameAnggota extends javax.swing.JFrame {
 
         inputNomor.setBackground(new java.awt.Color(222, 217, 186));
         inputNomor.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
-        inputNomor.setForeground(new java.awt.Color(255, 204, 0));
         inputNomor.setBorder(null);
         inputNomor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,7 +139,6 @@ public class frameAnggota extends javax.swing.JFrame {
 
         inputProdi.setBackground(new java.awt.Color(222, 217, 186));
         inputProdi.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
-        inputProdi.setForeground(new java.awt.Color(255, 204, 0));
         inputProdi.setBorder(null);
         inputProdi.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -151,7 +149,6 @@ public class frameAnggota extends javax.swing.JFrame {
 
         inputFakultas.setBackground(new java.awt.Color(222, 217, 186));
         inputFakultas.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
-        inputFakultas.setForeground(new java.awt.Color(255, 204, 0));
         inputFakultas.setBorder(null);
         inputFakultas.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,7 +159,6 @@ public class frameAnggota extends javax.swing.JFrame {
 
         inputAlamatAnggota.setBackground(new java.awt.Color(222, 217, 186));
         inputAlamatAnggota.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
-        inputAlamatAnggota.setForeground(new java.awt.Color(255, 204, 0));
         inputAlamatAnggota.setBorder(null);
         inputAlamatAnggota.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -173,25 +169,23 @@ public class frameAnggota extends javax.swing.JFrame {
 
         inputTahunMasuk.setBackground(new java.awt.Color(222, 217, 186));
         inputTahunMasuk.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
-        inputTahunMasuk.setForeground(new java.awt.Color(255, 204, 0));
         inputTahunMasuk.setBorder(null);
         inputTahunMasuk.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inputTahunMasukActionPerformed(evt);
             }
         });
-        getContentPane().add(inputTahunMasuk, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 370, 420, 50));
+        getContentPane().add(inputTahunMasuk, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 310, 410, 30));
 
         inputCari.setBackground(new java.awt.Color(222, 217, 186));
         inputCari.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
-        inputCari.setForeground(new java.awt.Color(255, 204, 0));
         inputCari.setBorder(null);
         inputCari.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inputCariActionPerformed(evt);
             }
         });
-        getContentPane().add(inputCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 312, 400, 30));
+        getContentPane().add(inputCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 370, 400, 40));
 
         btnTambah.setBackground(new java.awt.Color(125, 39, 34));
         btnTambah.setFont(new java.awt.Font("Century", 1, 18)); // NOI18N
@@ -367,7 +361,7 @@ public class frameAnggota extends javax.swing.JFrame {
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
-            
+//            
         
          int row = tabelAnggota.getSelectedRow();
         
