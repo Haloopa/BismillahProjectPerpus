@@ -11,10 +11,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 /**
@@ -63,7 +65,7 @@ public class framePengembalian extends javax.swing.JFrame {
                 ResultSetMetaData metaData = resultSet.getMetaData();
                 int columnCount = metaData.getColumnCount();
 
-                // Add rows to the model
+                // tambah baris
                 while (resultSet.next()) {
                     Object[] row = new Object[columnCount];
                     for (int i = 1; i <= columnCount; i++) {
@@ -171,6 +173,11 @@ public class framePengembalian extends javax.swing.JFrame {
         btnHapus.setForeground(new java.awt.Color(222, 217, 186));
         btnHapus.setText("Hapus");
         btnHapus.setBorder(null);
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 250, 210, 40));
 
         btnKeluar.setBackground(new java.awt.Color(125, 39, 34));
@@ -233,7 +240,7 @@ public class framePengembalian extends javax.swing.JFrame {
         // TODO add your handling code here:
         LocalDateTime currentime = LocalDateTime.now();
                 
-        DateTimeFormatter formatt = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String tanggalSekarang = currentime.format(formatt);
         TanggalKembali.setText(tanggalSekarang);
          
@@ -249,44 +256,78 @@ public class framePengembalian extends javax.swing.JFrame {
     private void tabelPengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelPengembalianMouseClicked
         // TODO add your handling code here:
         
+        
+        
+        int row = tabelPengembalian.getSelectedRow();
+        
+        if (row == -1){
+            return;
+        
+        }
+        
+
+        String idKembali = (String) tabelPengembalian.getValueAt(row, 8);
+        inputNoUrut.setText(idKembali);
+        
+        String idAnggota = (String) tabelPengembalian.getValueAt(row, 0);
+        inputIdAnggota.setText(idAnggota);
+        
+        String namaAnggota = (String) tabelPengembalian.getValueAt(row, 1);
+        inputNamaAnggota.setText(namaAnggota);
+        
+        String idBuku = (String) tabelPengembalian.getValueAt(row, 2);
+        inputIdBuku.setText(idBuku);
+        
+        String idPetugas = (String) tabelPengembalian.getValueAt(row, 4);
+        inputIdPetugas.setText(idPetugas);
+        
+        String judulBuku = (String) tabelPengembalian.getValueAt(row, 3);
+        inputJudulBuku.setText(judulBuku);
+        
+        java.sql.Date tanggalSql = (java.sql.Date) tabelPengembalian.getValueAt(row, 5);
+        
+        // Ubah java.sql.Date menjadi string dengan menggunakan SimpleDateFormat
+        String tanggal = new SimpleDateFormat("yyyy-MM-dd").format(tanggalSql);
+        TanggalKembali.setText(tanggal);
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_tabelPengembalianMouseClicked
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        // TODO add your handling code here:
+       
         try {
             ConnectionDatabase koneksidatabase;
             koneksidatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksidatabase.getConnection();
             
+            String idBuku = inputIdBuku.getText();
+            String query = "DELETE FROM pengembalian WHERE idBuku = ?";
+            PreparedStatement statement = connect.prepareStatement(query);
             
+             // Set nilai parameter idBuku pada query DELETE
+            statement.setString(1, idBuku);
+
+            // Jalankan query DELETE
+            int rowsAffected = statement.executeUpdate();
+
+            // Periksa apakah baris berhasil dihapus
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(this, "Data berhasil dihapus", "Pesan", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Hapus Data gagal", "Pesan", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+            
+            statement.close();
         } catch (SQLException ex) {
             Logger.getLogger(framePengembalian.class.getName()).log(Level.SEVERE, null, ex);
         }
             
-        
-        int row = tabelPengembalian.getSelectedRow();
-        
-//        if (row == -1){
-//            return;
-//        
-//        }
-        
-
-        String idPinjam = (String) tabelPengembalian.getValueAt(row, 1);
-        inputNoUrut.setText(idPinjam);
-        
-        String idPetugas = (String) tabelPengembalian.getValueAt(row, 6);
-        inputIdPetugas.setText(idPetugas);
-        
-        String idAnggota = (String) tabelPengembalian.getValueAt(row, 3);
-        inputIdAnggota.setText(idAnggota);
-        
-        String namaAnggota = (String) tabelPengembalian.getValueAt(row, 4);
-        inputNamaAnggota.setText(namaAnggota);
-        
-        String idBuku = (String) tabelPengembalian.getValueAt(row, 5);
-        inputIdBuku.setText(idBuku);
-        
-        String judulBuku = (String) tabelPengembalian.getValueAt(row, 9);
-        inputJudulBuku.setText(judulBuku);
-        
-    }//GEN-LAST:event_tabelPengembalianMouseClicked
+    }//GEN-LAST:event_btnHapusActionPerformed
 
     /**
      * @param args the command line arguments
