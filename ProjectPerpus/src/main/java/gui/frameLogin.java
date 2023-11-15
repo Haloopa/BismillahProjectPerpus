@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -34,37 +35,11 @@ public class frameLogin extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        dialogGagalLogin = new javax.swing.JDialog();
-        jPanel2 = new javax.swing.JPanel();
-        btnOk = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         inputUsername = new javax.swing.JTextField();
         inputPassword = new javax.swing.JPasswordField();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-
-        dialogGagalLogin.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jPanel2.setBackground(new java.awt.Color(153, 0, 0));
-        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        btnOk.setBackground(new java.awt.Color(102, 0, 0));
-        btnOk.setFont(new java.awt.Font("Century", 1, 14)); // NOI18N
-        btnOk.setForeground(new java.awt.Color(255, 204, 204));
-        btnOk.setText("OK");
-        btnOk.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnOkActionPerformed(evt);
-            }
-        });
-        jPanel2.add(btnOk, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 110, 100, 30));
-
-        jLabel2.setFont(new java.awt.Font("Century", 1, 14)); // NOI18N
-        jLabel2.setText("Pastikan Username dan Password Anda BENAR!!");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, -1, -1));
-
-        dialogGagalLogin.getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 400, 220));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -127,8 +102,7 @@ public class frameLogin extends javax.swing.JFrame {
                 menu.setVisible(true);
                 this.dispose();
             } else {
-                dialogGagalLogin.setSize(400, 200);
-                dialogGagalLogin.setVisible(true);
+                JOptionPane.showMessageDialog(this, "Login Gagal! Pastikan Username dan Password sesuai!", "Pesan", JOptionPane.INFORMATION_MESSAGE);
             }
             
             rs.close();
@@ -138,11 +112,6 @@ public class frameLogin extends javax.swing.JFrame {
             Logger.getLogger(frameLogin.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void btnOkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOkActionPerformed
-        // TODO add your handling code here:
-        dialogGagalLogin.setVisible(false); 
-    }//GEN-LAST:event_btnOkActionPerformed
 
     /**
      * @param args the command line arguments
@@ -180,14 +149,10 @@ public class frameLogin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnOk;
-    private javax.swing.JDialog dialogGagalLogin;
     private javax.swing.JPasswordField inputPassword;
     private javax.swing.JTextField inputUsername;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables
 }

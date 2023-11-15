@@ -7,13 +7,16 @@ import com.mycompany.projectperpus.ConnectionDatabase;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -35,7 +38,7 @@ public class framePengembalian extends javax.swing.JFrame {
         
         tableModel = (DefaultTableModel) tabelPengembalian.getModel();
 
-        // Inisialisasi Timer untuk polling data setiap 5 detik (sesuai kebutuhan)
+       
         Timer timer = new Timer(5000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -44,7 +47,6 @@ public class framePengembalian extends javax.swing.JFrame {
         });
         timer.start();
 
-        // Panggil metode pertama kali untuk mengisi data tabel
         refreshTableData();
     }
     
@@ -102,6 +104,8 @@ public class framePengembalian extends javax.swing.JFrame {
         btnKeluar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabelPengembalian = new javax.swing.JTable();
+        inputIdPinjam = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -171,6 +175,11 @@ public class framePengembalian extends javax.swing.JFrame {
         btnUbah.setForeground(new java.awt.Color(222, 217, 186));
         btnUbah.setText("Ubah");
         btnUbah.setBorder(null);
+        btnUbah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUbahActionPerformed(evt);
+            }
+        });
         jPanel1.add(btnUbah, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 180, 210, 40));
 
         btnHapus.setBackground(new java.awt.Color(125, 39, 34));
@@ -199,20 +208,20 @@ public class framePengembalian extends javax.swing.JFrame {
 
         tabelPengembalian.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "ID Anggota", "Nama Anggota", "ID Buku", "Judul Buku", "ID Petugas", "Tanggal Pengembalian", "Denda", "ID Pinjam", "ID Kembali", "Jatuh Tempo"
+                "ID Anggota", "Nama Anggota", "ID Buku", "Judul Buku", "ID Petugas", "Tanggal Pengembalian", "Denda", "ID Pinjam", "ID Kembali"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, false, false
+                false, false, false, false, false, false, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -232,6 +241,15 @@ public class framePengembalian extends javax.swing.JFrame {
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 477, 1300, 260));
 
+        inputIdPinjam.setBackground(new java.awt.Color(222, 217, 186));
+        inputIdPinjam.setBorder(null);
+        jPanel1.add(inputIdPinjam, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 380, 420, 40));
+
+        jLabel2.setFont(new java.awt.Font("Century", 1, 20)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 204, 0));
+        jLabel2.setText("ID Pinjam");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 350, -1, -1));
+
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/DATA PENGEMBALIAN.png"))); // NOI18N
         jLabel1.setText("jLabel1");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -244,11 +262,77 @@ public class framePengembalian extends javax.swing.JFrame {
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
         // TODO add your handling code here:
         LocalDateTime currentime = LocalDateTime.now();
-                
         DateTimeFormatter formatt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String tanggalSekarang = currentime.format(formatt);
         TanggalKembali.setText(tanggalSekarang);
-         
+
+    try {
+        ConnectionDatabase koneksidatabase;
+        koneksidatabase = ConnectionDatabase.getInstance();
+        Connection connect = koneksidatabase.getConnection();
+
+        String idAnggota = inputIdAnggota.getText();
+        String namaAnggota = inputNamaAnggota.getText();
+        String idBuku = inputIdBuku.getText();
+        String judulBuku = inputJudulBuku.getText();
+        String idPetugas = inputIdPetugas.getText();
+        String idPinjam = inputIdPinjam.getText();
+
+        String tanggal = TanggalKembali.getText();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date tglKembali = new Date(sdf.parse(tanggal).getTime());
+
+        SimpleDateFormat sdfid = new SimpleDateFormat("ddMM");
+        String tglKembaliId = sdfid.format(tglKembali);
+
+        // Ambil tanggalPinjam dari tabel peminjaman
+        Date tglPinjam;
+        String queryTanggalPinjam = "SELECT tanggalPinjam FROM peminjaman WHERE idPinjam = ?";
+        try (PreparedStatement statement = connect.prepareStatement(queryTanggalPinjam)) {
+            statement.setString(1, idPinjam);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                tglPinjam = resultSet.getDate("tanggalPinjam");
+                System.out.println("Tanggal Pinjam: " + sdf.format(tglPinjam));
+            } else {
+                System.out.println("Data tidak ditemukan");
+                return;
+            }
+        }
+
+        long hariPinjam = TimeUnit.DAYS.convert(tglKembali.getTime() - tglPinjam.getTime(), TimeUnit.MILLISECONDS);
+        int denda = (hariPinjam > 5) ? (int) ((hariPinjam - 5) * 5000) : 0;
+
+        String idKembali = "PL" + tglKembaliId + inputNoUrut.getText();
+
+        String query = "INSERT INTO pengembalian (idAnggota, namaAnggota, idBuku, judulBuku, idPetugas, tanggalKembali, denda, idPinjam, idKembali) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connect.prepareStatement(query)) {
+            ps.setString(1, idAnggota);
+            ps.setString(2, namaAnggota);
+            ps.setString(3, idBuku);
+            ps.setString(4, judulBuku);
+            ps.setString(5, idPetugas);
+            ps.setDate(6, new java.sql.Date(tglKembali.getTime()));
+            ps.setInt(7, denda);
+            ps.setString(8, idPinjam);
+            ps.setString(9, idKembali);
+
+      
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(this, "Data Pengembalian Berhasil ditambahkan!", "Pesan", JOptionPane.INFORMATION_MESSAGE);
+            
+            } else {
+                JOptionPane.showMessageDialog(this, "Gagal menambahkan data ke tabel pengembalian", "Pesan", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+
+    } catch (ParseException | SQLException ex) {
+        Logger.getLogger(framePengembalian.class.getName()).log(Level.SEVERE, null, ex);
+    }
+            
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
@@ -288,6 +372,9 @@ public class framePengembalian extends javax.swing.JFrame {
         
         String judulBuku = (String) tabelPengembalian.getValueAt(row, 3);
         inputJudulBuku.setText(judulBuku);
+        
+        String idPinjam = (String) tabelPengembalian.getValueAt(row, 7);
+        inputIdPinjam.setText(idPinjam);
         
         java.sql.Date tanggalSql = (java.sql.Date) tabelPengembalian.getValueAt(row, 5);
         
@@ -338,6 +425,53 @@ public class framePengembalian extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_inputNoUrutActionPerformed
 
+    private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
+        // TODO add your handling code here:
+        try {
+        ConnectionDatabase koneksidatabase;
+        koneksidatabase = ConnectionDatabase.getInstance();
+        Connection connect = koneksidatabase.getConnection();
+        
+        String namaAnggota = inputNamaAnggota.getText();
+        String judulBuku = inputJudulBuku.getText();
+        String idPinjam = inputIdPinjam.getText();
+
+        String tanggal = TanggalKembali.getText();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date tglKembali = null;
+        try {
+            tglKembali = new Date(sdf.parse(tanggal).getTime());
+        } catch (ParseException ex) {
+            Logger.getLogger(framePengembalian.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        SimpleDateFormat sdfid = new SimpleDateFormat("ddMM");
+        String tglKembaliId = sdfid.format(tglKembali);
+
+        String idKembali = "PL" + tglKembaliId + inputNoUrut.getText();
+
+        
+        String query = "UPDATE pengembalian SET namaAnggota = ?, judulBuku = ?, idKembali = ? WHERE idPinjam = ?";
+        try (PreparedStatement st = connect.prepareStatement(query)) {
+            st.setString(1, namaAnggota);
+            st.setString(2, judulBuku);
+            st.setString(3, idKembali);
+            st.setString(4, idPinjam);
+
+            
+            int rowsAffected = st.executeUpdate();
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(this, "Data berhasil diubah", "Pesan", JOptionPane.INFORMATION_MESSAGE);
+            
+            } else {
+                JOptionPane.showMessageDialog(this, "Ubah Data gagal", "Pesan", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(framePengembalian.class.getName()).log(Level.SEVERE, null, ex);
+    }
+        
+    }//GEN-LAST:event_btnUbahActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -383,10 +517,12 @@ public class framePengembalian extends javax.swing.JFrame {
     private javax.swing.JTextField inputIdAnggota;
     private javax.swing.JTextField inputIdBuku;
     private javax.swing.JTextField inputIdPetugas;
+    private javax.swing.JTextField inputIdPinjam;
     private javax.swing.JTextField inputJudulBuku;
     private javax.swing.JTextField inputNamaAnggota;
     private javax.swing.JTextField inputNoUrut;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tabelPengembalian;
