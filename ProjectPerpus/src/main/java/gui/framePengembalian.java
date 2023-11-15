@@ -106,6 +106,7 @@ public class framePengembalian extends javax.swing.JFrame {
         tabelPengembalian = new javax.swing.JTable();
         inputIdPinjam = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        btnClear = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -242,13 +243,24 @@ public class framePengembalian extends javax.swing.JFrame {
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 477, 1300, 260));
 
         inputIdPinjam.setBackground(new java.awt.Color(222, 217, 186));
+        inputIdPinjam.setFont(new java.awt.Font("Century", 1, 18)); // NOI18N
         inputIdPinjam.setBorder(null);
-        jPanel1.add(inputIdPinjam, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 380, 420, 40));
+        jPanel1.add(inputIdPinjam, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 380, 410, 40));
 
         jLabel2.setFont(new java.awt.Font("Century", 1, 20)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 204, 0));
         jLabel2.setText("ID Pinjam");
         jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 350, -1, -1));
+
+        btnClear.setBackground(new java.awt.Color(255, 204, 0));
+        btnClear.setForeground(new java.awt.Color(102, 0, 0));
+        btnClear.setText("Clear All");
+        btnClear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClearActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnClear, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 440, 90, -1));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/DATA PENGEMBALIAN.png"))); // NOI18N
         jLabel1.setText("jLabel1");
@@ -297,6 +309,8 @@ public class framePengembalian extends javax.swing.JFrame {
                 System.out.println("Tanggal Pinjam: " + sdf.format(tglPinjam));
             } else {
                 System.out.println("Data tidak ditemukan");
+                JOptionPane.showMessageDialog(this, "Data tidak Valid", "Pesan", JOptionPane.INFORMATION_MESSAGE);
+         
                 return;
             }
         }
@@ -330,6 +344,7 @@ public class framePengembalian extends javax.swing.JFrame {
         }
 
     } catch (ParseException | SQLException ex) {
+           
         Logger.getLogger(framePengembalian.class.getName()).log(Level.SEVERE, null, ex);
     }
             
@@ -472,6 +487,19 @@ public class framePengembalian extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnUbahActionPerformed
 
+    private void btnClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearActionPerformed
+        // TODO add your handling code here:
+        String kosong = "";
+        inputNoUrut.setText(kosong);
+        inputIdAnggota.setText(kosong);
+        inputIdBuku.setText(kosong);
+        inputIdPetugas.setText(kosong);
+        inputJudulBuku.setText(kosong);
+        inputNamaAnggota.setText(kosong);
+        inputIdPinjam.setText(kosong);
+        TanggalKembali.setText(kosong);
+    }//GEN-LAST:event_btnClearActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -510,6 +538,7 @@ public class framePengembalian extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel TanggalKembali;
+    private javax.swing.JButton btnClear;
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnKeluar;
     private javax.swing.JButton btnTambah;
