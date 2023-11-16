@@ -95,6 +95,8 @@ public class framePeminjaman extends javax.swing.JFrame {
         btnHapus = new javax.swing.JButton();
         btnKeluar = new javax.swing.JButton();
         btnCari = new javax.swing.JButton();
+        txtOtomatis = new javax.swing.JLabel();
+        txtOtomatis1 = new javax.swing.JLabel();
         bgPeminjaman = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -283,6 +285,16 @@ public class framePeminjaman extends javax.swing.JFrame {
             }
         });
         getContentPane().add(btnCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 430, 110, 30));
+
+        txtOtomatis.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        txtOtomatis.setForeground(java.awt.Color.orange);
+        txtOtomatis.setText("(OTOMATIS)");
+        getContentPane().add(txtOtomatis, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 350, -1, -1));
+
+        txtOtomatis1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        txtOtomatis1.setForeground(java.awt.Color.orange);
+        txtOtomatis1.setText("(OTOMATIS)");
+        getContentPane().add(txtOtomatis1, new org.netbeans.lib.awtextra.AbsoluteConstraints(700, 280, -1, -1));
 
         bgPeminjaman.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/DATA PEMINJAMAN.png"))); // NOI18N
         getContentPane().add(bgPeminjaman, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
@@ -505,5 +517,7 @@ public class framePeminjaman extends javax.swing.JFrame {
     private javax.swing.JTextField inputTanggalPinjam;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tabelPeminjaman;
+    private javax.swing.JLabel txtOtomatis;
+    private javax.swing.JLabel txtOtomatis1;
     // End of variables declaration//GEN-END:variables
 }
