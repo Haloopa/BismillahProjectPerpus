@@ -4,13 +4,15 @@
  */
 package gui;
 import com.mycompany.projectperpus.ConnectionDatabase;
-import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -23,8 +25,55 @@ public class frameAnggota extends javax.swing.JFrame {
     /**
      * Creates new form frameAnggota
      */
+    private DefaultTableModel tableModel;
+    
     public frameAnggota() {
         initComponents();
+        
+        tableModel = (DefaultTableModel) tabelAnggota.getModel();
+
+       
+        Timer timer = new Timer(5000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                refreshTableData();
+            }
+        });
+        timer.start();
+
+        refreshTableData();
+    }
+    
+   private void refreshTableData() {
+        try {
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
+            Connection connect = koneksidatabase.getConnection();
+
+            // Mengambil data dari database
+            String query = "SELECT * FROM anggota";
+            try (PreparedStatement statement = connect.prepareStatement(query);
+                 ResultSet resultSet = statement.executeQuery()) {
+
+                // Clear existing data
+                tableModel.setRowCount(0);
+
+                // Populate data from the result set
+                ResultSetMetaData metaData = resultSet.getMetaData();
+                int columnCount = metaData.getColumnCount();
+
+                // tambah baris
+                while (resultSet.next()) {
+                    Object[] row = new Object[columnCount];
+                    for (int i = 1; i <= columnCount; i++) {
+                        row[i - 1] = resultSet.getObject(i);
+                    }
+                    tableModel.addRow(row);
+                }
+                tabelAnggota.setModel(tableModel);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
 }
     private void kosongkanForm(){
         inputIDAnggota.setEditable(true);
@@ -36,43 +85,47 @@ public class frameAnggota extends javax.swing.JFrame {
         inputTahunMasuk.setText(null);
     }
     
-    private void tampilkanData(){
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("ID Anggota");
-        model.addColumn("Nama Anggota");
-        model.addColumn("Nomor HP Anggota");
-        model.addColumn("Prodi");
-        model.addColumn("Fakultas");
-        model.addColumn("Alamat");
-        model.addColumn("Tahun Masuk");
-        
-        try {
-            int no = 1;
-            String sql = "SELECT * FROM anggota WHERE idAnggota like '%"
-                    + inputCari.getText() + "%'"
-                    + " or namaAnggota '%" + inputNamaAnggota.getText()
-                    + "%'" + "nomorHPAnggota '%" + inputNomor.getText()
-                    + "%'" + "prodi '%" + inputProdi.getText() 
-                    + "%'" + "fakultas '%" + inputFakultas.getText() 
-                    + "%'" + "alamat '%" + inputAlamatAnggota.getText() 
-                    + "%'" + "tahunMasuk '%" + inputTahunMasuk.getText() + "%'";
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
-            Connection connect = koneksidatabase.getConnection();
-            Statement st = connect.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            
-            while (rs.next()) {
-                model.addRow(new Object[] {no++, rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7)});
-                
-                tabelAnggota.setModel(model);
-            }
-            JOptionPane.showMessageDialog(null, "Data anggota ditemukan!");
-        } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+    private void tampilkanData() {
+    DefaultTableModel model = (DefaultTableModel) tabelAnggota.getModel();
+    model.setRowCount(0);
+
+    try {
+        String sql = "SELECT * FROM anggota WHERE idAnggota LIKE '%" + inputCari.getText() + "%' "
+                + "OR namaAnggota LIKE '%" + inputNamaAnggota.getText() + "%' "
+                + "OR nomorHPAnggota LIKE '%" + inputNomor.getText() + "%' "
+                + "OR prodi LIKE '%" + inputProdi.getText() + "%' "
+                + "OR fakultas LIKE '%" + inputFakultas.getText() + "%' "
+                + "OR alamat LIKE '%" + inputAlamatAnggota.getText() + "%' "
+                + "OR tahunMasuk LIKE '%" + inputTahunMasuk.getText() + "%'";
+
+        ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
+        Connection connect = koneksidatabase.getConnection();
+        PreparedStatement ps = connect.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+        boolean dataDitemukan = false; // Tambahkan variabel boolean
+
+        while (rs.next()) {
+            dataDitemukan = true; // Set variabel ke true jika ada hasil pencarian
+            model.addRow(new Object[]{
+                    rs.getString(1), rs.getString(2), rs.getString(3),
+                    rs.getString(4), rs.getString(5), rs.getString(6),
+                    rs.getString(7)
+            });
         }
+
+        // Periksa setiap input untuk menampilkan pesan "Data ditemukan" jika setidaknya satu input terisi
+        if (dataDitemukan && !(inputCari.getText().isEmpty() && inputNamaAnggota.getText().isEmpty() && inputNomor.getText().isEmpty() && inputProdi.getText().isEmpty() && inputFakultas.getText().isEmpty() && inputAlamatAnggota.getText().isEmpty() && inputTahunMasuk.getText().isEmpty())) {
+            JOptionPane.showMessageDialog(null, "Data anggota ditemukan!");
+        } else {
+            // Tidak menampilkan pesan jika data tidak ditemukan pada operasi "Ubah" atau "Hapus"
+            // JOptionPane.showMessageDialog(null, "Data anggota tidak ditemukan!");
+        }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, e.getMessage());
     }
-    
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -185,7 +238,7 @@ public class frameAnggota extends javax.swing.JFrame {
                 inputCariActionPerformed(evt);
             }
         });
-        getContentPane().add(inputCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 370, 400, 40));
+        getContentPane().add(inputCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 410, 400, 40));
 
         btnTambah.setBackground(new java.awt.Color(125, 39, 34));
         btnTambah.setFont(new java.awt.Font("Century", 1, 18)); // NOI18N
@@ -245,7 +298,7 @@ public class frameAnggota extends javax.swing.JFrame {
                 btnCariActionPerformed(evt);
             }
         });
-        getContentPane().add(btnCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 380, 220, 50));
+        getContentPane().add(btnCari, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 410, 220, 50));
 
         tabelAnggota.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
         tabelAnggota.setModel(new javax.swing.table.DefaultTableModel(
@@ -304,41 +357,47 @@ public class frameAnggota extends javax.swing.JFrame {
 
     private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
         // TODO add your handling code here:
-         try {
-            String sql = "UPDATE anggota SET idAnggota = '" + inputIDAnggota.getText()
-                    + "' , namaAnggota = '" + inputNamaAnggota.getText()
-                    + "' , nomorHPAnggota = '" + inputNomor.getText()
-                    + "' , prodi = '" + inputProdi.getText() 
-                    + "' , fakultas = '" + inputFakultas.getText() 
-                    + "' , alamat = '" + inputAlamatAnggota.getText() 
-                    + "' , tahunMasuk = '" + inputTahunMasuk.getText() 
-                    + "' WHERE idAnggota = '" + inputIDAnggota.getSelectedText() + "'"; 
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
+        
+        try {
+            String sqlUpdate = "UPDATE anggota SET namaAnggota = ?, nomorHPAnggota = ?, prodi = ?, "
+                + "fakultas = ?, alamat = ?, tahunMasuk = ? WHERE idAnggota = ?";
+
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksidatabase.getConnection();
-            PreparedStatement ps = connect.prepareStatement(sql);
-            ps.execute();
+            PreparedStatement ps = connect.prepareStatement(sqlUpdate);
+
+            ps.setString(1, inputNamaAnggota.getText());
+            ps.setString(2, inputNomor.getText());
+            ps.setString(3, inputProdi.getText());
+            ps.setString(4, inputFakultas.getText());
+            ps.setString(5, inputAlamatAnggota.getText());
+            ps.setString(6, inputTahunMasuk.getText());
+            ps.setString(7, inputIDAnggota.getText());
+
+            ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data anggota berhasil diubah!");
-            tampilkanData();
             kosongkanForm();
-        } catch (HeadlessException | SQLException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-        }
+    }
+
     }//GEN-LAST:event_btnUbahActionPerformed
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         // TODO add your handling code here:
-         try {
-            String sql = "DELETE FROM anggota WHERE idAnggota = '" + inputIDAnggota.getText()+ "'"; 
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
+        try {
+            String sqlDelete = "DELETE FROM anggota WHERE idAnggota = ?";
+
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksidatabase.getConnection();
-            PreparedStatement ps = connect.prepareStatement(sql);
+            PreparedStatement ps = connect.prepareStatement(sqlDelete);
+
+            ps.setString(1, inputIDAnggota.getText());
+
             ps.execute();
             JOptionPane.showMessageDialog(null, "Data anggota berhasil dihapus!");
-            tampilkanData();
             kosongkanForm();
-        } catch (HeadlessException | SQLException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_btnHapusActionPerformed
@@ -352,26 +411,16 @@ public class frameAnggota extends javax.swing.JFrame {
 
     private void tabelAnggotaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelAnggotaMouseClicked
         // TODO add your handling code here:
-        try {
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
-            Connection connect = koneksidatabase.getConnection();
-            
-            
-        } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+
+        int row = tabelAnggota.getSelectedRow();
+        
+        if (row == -1){
+            return;
+        
         }
-//            
-        
-         int row = tabelAnggota.getSelectedRow();
-        
-//        if (row == -1){
-//            return;
-//        
-//        }
         
 
-       String idAnggota = (String) tabelAnggota.getValueAt(row, 1);
+        String idAnggota = (String) tabelAnggota.getValueAt(row, 1);
         inputIDAnggota.setText(idAnggota);
         
         String namaAnggota = (String) tabelAnggota.getValueAt(row, 2);
@@ -391,47 +440,42 @@ public class frameAnggota extends javax.swing.JFrame {
         
         String tahunMasuk = (String) tabelAnggota.getValueAt(row, 7);
         inputTahunMasuk.setText(tahunMasuk);
+        
+        tampilkanData();
+        kosongkanForm();
     }//GEN-LAST:event_tabelAnggotaMouseClicked
 
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
         // TODO add your handling code here:
-         try {
-            String sql = "INSERT INTO anggota VALUES ('"+inputIDAnggota.getText()+"' , '"+inputNamaAnggota.getText()+"' , '"+inputNomor.getText()+"' , '"+inputProdi.getText()+"' , '"+inputFakultas.getText()+"' , '"+inputAlamatAnggota.getText()+"' , '"+inputTahunMasuk.getText()+"')"; 
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
+        
+        try {
+            String sql = "INSERT INTO anggota VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksidatabase.getConnection();
             PreparedStatement ps = connect.prepareStatement(sql);
-            ps.execute();
+
+            ps.setString(1, inputIDAnggota.getText());
+            ps.setString(2, inputNamaAnggota.getText());
+            ps.setString(3, inputNomor.getText());
+            ps.setString(4, inputProdi.getText());
+            ps.setString(5, inputFakultas.getText());
+            ps.setString(6, inputAlamatAnggota.getText());
+            ps.setString(7, inputTahunMasuk.getText());
+
+            ps.executeUpdate();
+
             JOptionPane.showMessageDialog(null, "Data anggota berhasil ditambahkan!");
-            tampilkanData();
             kosongkanForm();
-        } catch (HeadlessException | SQLException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_btnTambahActionPerformed
 
     private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
         // TODO add your handling code here:
-        try {
-            String sql = "SELECT * FROM anggota WHERE idAnggota like '%"
-                    + inputCari.getText() + "%'"
-                    + " or namaAnggota '%" + inputNamaAnggota.getText()
-                    + "%'" + "nomorHPAnggota '%" + inputNomor.getText()
-                    + "%'" + "prodi '%" + inputProdi.getText() 
-                    + "%'" + "fakultas '%" + inputFakultas.getText() 
-                    + "%'" + "alamat '%" + inputAlamatAnggota.getText() 
-                    + "%'" + "tahunMasuk '%" + inputTahunMasuk.getText() + "%'";
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
-            Connection connect = koneksidatabase.getConnection();
-            PreparedStatement ps = connect.prepareStatement(sql);
-            ps.execute();
-            JOptionPane.showMessageDialog(null, "Data anggota ditemukan!");
-            tampilkanData();
-            kosongkanForm();
-        } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
+        
+        tampilkanData(); 
     }//GEN-LAST:event_btnCariActionPerformed
 
     private void inputCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputCariActionPerformed

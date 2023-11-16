@@ -5,12 +5,16 @@
 package gui;
 import com.mycompany.projectperpus.ConnectionDatabase;
 import java.awt.HeadlessException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 /**
  *
@@ -21,10 +25,58 @@ public class frameBuku extends javax.swing.JFrame {
     /**
      * Creates new form frameBuku
      */
+    private DefaultTableModel tableModel;
+    
     public frameBuku() {
         initComponents();
+        
+        tableModel = (DefaultTableModel) tabelBuku.getModel();
+
+       
+        Timer timer = new Timer(5000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                refreshTableData();
+            }
+        });
+        timer.start();
+
+        refreshTableData();
     }
     
+   private void refreshTableData() {
+        try {
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
+            Connection connect = koneksidatabase.getConnection();
+
+            // Mengambil data dari database
+            String query = "SELECT * FROM buku";
+            try (PreparedStatement statement = connect.prepareStatement(query);
+                 ResultSet resultSet = statement.executeQuery()) {
+
+                // Clear existing data
+                tableModel.setRowCount(0);
+
+                // Populate data from the result set
+                ResultSetMetaData metaData = resultSet.getMetaData();
+                int columnCount = metaData.getColumnCount();
+
+                // tambah baris
+                while (resultSet.next()) {
+                    Object[] row = new Object[columnCount];
+                    for (int i = 1; i <= columnCount; i++) {
+                        row[i - 1] = resultSet.getObject(i);
+                    }
+                    tableModel.addRow(row);
+                }
+                tabelBuku.setModel(tableModel);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        
+}
+   
     private void kosongkanForm(){
         inputIDBuku.setEditable(true);
         inputJudulBuku.setText(null);
@@ -34,40 +86,48 @@ public class frameBuku extends javax.swing.JFrame {
         inputRak.setText(null);
     }
     
-    private void tampilkanData(){
-        DefaultTableModel model = new DefaultTableModel();
-        model.addColumn("ID Buku");
-        model.addColumn("Judul Buku");
-        model.addColumn("Penulis");
-        model.addColumn("Penerbit");
-        model.addColumn("Tahun Terbit");
-        model.addColumn("Rak");
-        
-        try {
-            int no = 1;
-            String sql = "SELECT * FROM buku WHERE idBuku like '%"
-                    + inputCari.getText() + "%'"
-                    + " or judulBuku '%" + inputJudulBuku.getText()
-                    + "%'" + "penulis '%" + inputPenulis.getText()
-                    + "%'" + "penerbit '%" + inputPenerbit.getText() 
-                    + "%'" + "tahunTerbit '%" + inputTahunTerbit.getText() 
-                    + "%'" + "rak '%" + inputRak.getText()+ "%'"; 
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
-            Connection connect = koneksidatabase.getConnection();
-            Statement st = connect.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            
-            while (rs.next()) {
-                model.addRow(new Object[] {no++, rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)});
-                
-                tabelBuku.setModel(model);
-            }
-            JOptionPane.showMessageDialog(null, "Data buku ditemukan!");
-        } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+   private void tampilkanData() {
+    DefaultTableModel model = new DefaultTableModel();
+    model.addColumn("ID Buku");
+    model.addColumn("Judul Buku");
+    model.addColumn("Penulis");
+    model.addColumn("Penerbit");
+    model.addColumn("Tahun Terbit");
+    model.addColumn("Rak");
+    
+    try {
+        String sql = "SELECT * FROM buku WHERE idBuku LIKE ? OR judulBuku LIKE ? OR penulis LIKE ? OR penerbit LIKE ? OR tahunTerbit LIKE ? OR rak LIKE ?";
+        ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
+        Connection connect = koneksidatabase.getConnection();
+        PreparedStatement ps = connect.prepareStatement(sql);
+
+        // Set parameter values for the prepared statement
+        for (int i = 1; i <= 6; i++) {
+            ps.setString(i, "%" + inputCari.getText() + "%");
         }
+
+        ResultSet rs = ps.executeQuery();
+        
+        int no = 1;
+        while (rs.next()) {
+            model.addRow(new Object[] {
+                no++, 
+                rs.getString(1), 
+                rs.getString(2), 
+                rs.getString(3), 
+                rs.getString(4), 
+                rs.getString(5), 
+                rs.getString(6)
+            });
+        }
+        
+        tabelBuku.setModel(model);
+        JOptionPane.showMessageDialog(null, "Data buku ditemukan!");
+    } catch (HeadlessException | SQLException e) {
+        JOptionPane.showMessageDialog(this, e.getMessage());
     }
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -303,7 +363,6 @@ public class frameBuku extends javax.swing.JFrame {
             PreparedStatement ps = connect.prepareStatement(sql);
             ps.execute();
             JOptionPane.showMessageDialog(null, "Data buku berhasil diubah!");
-            tampilkanData();
             kosongkanForm();
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
@@ -320,7 +379,6 @@ public class frameBuku extends javax.swing.JFrame {
             PreparedStatement ps = connect.prepareStatement(sql);
             ps.execute();
             JOptionPane.showMessageDialog(null, "Data buku berhasil dihapus!");
-            tampilkanData();
             kosongkanForm();
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
@@ -371,7 +429,6 @@ public class frameBuku extends javax.swing.JFrame {
             PreparedStatement ps = connect.prepareStatement(sql);
             ps.execute();
             JOptionPane.showMessageDialog(null, "Data buku berhasil ditambahkan!");
-            tampilkanData();
             kosongkanForm();
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
@@ -380,23 +437,14 @@ public class frameBuku extends javax.swing.JFrame {
 
     private void tabelBukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelBukuMouseClicked
         // TODO add your handling code here:
-         try {
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
-            Connection connect = koneksidatabase.getConnection();
-            
-            
-        } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+         
+        
+        int row = tabelBuku.getSelectedRow();
+        
+        if (row == -1){
+            return;
+        
         }
-//            
-        
-         int row = tabelBuku.getSelectedRow();
-        
-//        if (row == -1){
-//            return;
-//        
-//        }
         
 
        String idBuku = (String) tabelBuku.getValueAt(row, 1);
