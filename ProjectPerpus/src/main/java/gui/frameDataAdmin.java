@@ -4,6 +4,7 @@
  */
 package gui;
 import com.mycompany.projectperpus.ConnectionDatabase;
+import java.awt.Color;
 import java.awt.HeadlessException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,6 +20,7 @@ import javax.swing.table.DefaultTableModel;
 public class frameDataAdmin extends javax.swing.JFrame {
     public frameDataAdmin() {
         initComponents();
+        showData();
     }
     private void refreshForm(){
         inputIDPetugas.setText(null);
@@ -28,36 +30,33 @@ public class frameDataAdmin extends javax.swing.JFrame {
         inputAlamatRumah.setText(null);
     }
     
-        private void showData(){
+    private void showData(){
         DefaultTableModel tbl = new DefaultTableModel();
         tbl.addColumn("ID Petugas");
         tbl.addColumn("Nama Petugas");
         tbl.addColumn("Password");
-        tbl.addColumn("NomorHP");
+        tbl.addColumn("Nomor HP");
         tbl.addColumn("Alamat Rumah");
         tabelDataAdmin.setModel(tbl);
-        
+
         try {
             int no = 1;
-            String sql = "SELECT * FROM anggota WHERE idPetugas like '%"
+            String sql = "SELECT * FROM petugas WHERE idPetugas like '%"
                     + inputPencarian.getText() + "%'"
-                    + " or namaPetugas '%" + inputNamaPetugas.getText()
-                    + "%'" + "password '%" + inputPassword.getText()
-                    + "%'" + "nomorHP '%" + inputNoHP.getText() 
-                    + "%'" + "alamatPetugas '%" + inputAlamatRumah.getText() 
+                    + " or namaPetugas like '%" + inputNamaPetugas.getText()
+                    + "%' or password like '%" + inputPassword.getText()
+                    + "%' or nomorHP like '%" + inputNoHP.getText()
+                    + "%' or alamatPetugas like '%" + inputAlamatRumah.getText()
                     + "%'";
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksidatabase.getConnection();
             Statement st = connect.createStatement();
             ResultSet rs = st.executeQuery(sql);
-            
+
             while (rs.next()) {
-                tbl.addRow(new Object[] {no++, rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)});
-                
+                tbl.addRow(new Object[]{rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)});
                 tabelDataAdmin.setModel(tbl);
             }
-            JOptionPane.showMessageDialog(null, "Data Admin ditemukan!");
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
@@ -280,19 +279,19 @@ public class frameDataAdmin extends javax.swing.JFrame {
             //            return;
             //
             //        }
-        String idPetugas = (String) tabelDataAdmin.getValueAt(row, 1);
+        String idPetugas = (String) tabelDataAdmin.getValueAt(row, 0);
         inputIDPetugas.setText(idPetugas);
 
-        String namaPetugas = (String) tabelDataAdmin.getValueAt(row, 3);
+        String namaPetugas = (String) tabelDataAdmin.getValueAt(row, 1);
         inputNamaPetugas.setText(namaPetugas);
 
-        String password = (String) tabelDataAdmin.getValueAt(row, 4);
+        String password = (String) tabelDataAdmin.getValueAt(row, 2);
         inputPassword.setText(password);
 
-        String nomorHP = (String) tabelDataAdmin.getValueAt(row, 5);
+        String nomorHP = (String) tabelDataAdmin.getValueAt(row, 3);
         inputNoHP.setText(nomorHP);
 
-        String alamatRumah = (String) tabelDataAdmin.getValueAt(row, 9);
+        String alamatRumah = (String) tabelDataAdmin.getValueAt(row, 4);
         inputAlamatRumah.setText(alamatRumah);
     }//GEN-LAST:event_tabelDataAdminMouseClicked
 
@@ -304,20 +303,33 @@ public class frameDataAdmin extends javax.swing.JFrame {
 
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         try {
-            String sql = "DELETE FROM petugas WHERE idPetugas = '" + inputIDPetugas.getText()+ "'"; 
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
+            int selectedRow = tabelDataAdmin.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Pilih data yang akan dihapus!");
+        } else {
+            String idPetugas = (String) tabelDataAdmin.getValueAt(selectedRow, 0);
+
+            String deletePeminjamanSQL = "DELETE FROM peminjaman WHERE idPetugas = ?";
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksidatabase.getConnection();
-            PreparedStatement ps = connect.prepareStatement(sql);
-            ps.execute();
+            PreparedStatement psPeminjaman = connect.prepareStatement(deletePeminjamanSQL);
+            psPeminjaman.setString(1, idPetugas);
+            psPeminjaman.executeUpdate();
+
+            String deletePetugasSQL = "DELETE FROM petugas WHERE idPetugas = ?";
+            PreparedStatement psPetugas = connect.prepareStatement(deletePetugasSQL);
+            psPetugas.setString(1, idPetugas);
+            psPetugas.executeUpdate();
+            
             JOptionPane.showMessageDialog(null, "Data Admin Berhasil Dihapus!");
             showData();
             refreshForm();
-        } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
         }
+    } catch (HeadlessException | SQLException e) {
+        JOptionPane.showMessageDialog(this, e.getMessage());
     }//GEN-LAST:event_btnHapusActionPerformed
-
+    }
     private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
         try {
             String sql = "UPDATE petugas SET idPetugas = '" + inputIDPetugas.getText()
@@ -325,7 +337,7 @@ public class frameDataAdmin extends javax.swing.JFrame {
                     + "' , password = '" + inputPassword.getText()
                     + "' , nomorHP = '" + inputNoHP.getText() 
                     + "' , alamatPetugas = '" + inputAlamatRumah.getText() 
-                    + "' WHERE idPetugas = '" + inputIDPetugas.getSelectedText() + "'"; 
+                    + "' WHERE idPetugas = '" + inputIDPetugas.getText() + "'"; 
             ConnectionDatabase koneksidatabase;
             koneksidatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksidatabase.getConnection();
@@ -341,11 +353,17 @@ public class frameDataAdmin extends javax.swing.JFrame {
 
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
         try {
-            String sql = "INSERT INTO petugas VALUES ('"+inputIDPetugas.getText()+"' , '"+inputNamaPetugas.getText()+"' , '"+inputPassword.getText()+"' , '"+inputNoHP.getText()+"' , '"+inputAlamatRumah.getText()+"')"; 
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
+            String sql = "INSERT INTO petugas VALUES (?, ?, ?, ?, ?)";
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksidatabase.getConnection();
             PreparedStatement ps = connect.prepareStatement(sql);
+
+            ps.setString(1, inputIDPetugas.getText());
+            ps.setString(2, inputNamaPetugas.getText());
+            ps.setString(3, inputPassword.getText());
+            ps.setString(4, inputNoHP.getText());
+            ps.setString(5, inputAlamatRumah.getText());
+
             ps.execute();
             JOptionPane.showMessageDialog(null, "Data Admin Berhasil Ditambahkan!");
             showData();
@@ -357,22 +375,34 @@ public class frameDataAdmin extends javax.swing.JFrame {
 
     private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
         try {
-            String sql = "SELECT * FROM petugas WHERE idPetugas like '%"
-                    + inputPencarian.getText() + "%'"
-                    + " or namaPetugas '%" + inputNamaPetugas.getText()
-                    + "%'" + "password '%" + inputPassword.getText()
-                    + "%'" + "nomorHP '%" + inputNoHP.getText() 
-                    + "%'" + "alamatPetugas '%" + inputAlamatRumah.getText() 
-                    + "%'";
-            
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
+            String sql = "SELECT * FROM petugas WHERE idPetugas LIKE ? OR namaPetugas LIKE ? OR password LIKE ? OR nomorHP LIKE ? OR alamatPetugas LIKE ?";
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksidatabase.getConnection();
             PreparedStatement ps = connect.prepareStatement(sql);
-            ps.execute();
+
+            // Mengatur parameter dengan menambahkan karakter wildcard (%) ke nilai input
+            ps.setString(1, "%" + inputPencarian.getText() + "%");
+            ps.setString(2, "%" + inputNamaPetugas.getText() + "%");
+            ps.setString(3, "%" + inputPassword.getText() + "%");
+            ps.setString(4, "%" + inputNoHP.getText() + "%");
+            ps.setString(5, "%" + inputAlamatRumah.getText() + "%");
+
+            ResultSet rs = ps.executeQuery();
+
+            DefaultTableModel tbl = new DefaultTableModel();
+            tbl.addColumn("ID Petugas");
+            tbl.addColumn("Nama Petugas");
+            tbl.addColumn("Password");
+            tbl.addColumn("Nomor HP");
+            tbl.addColumn("Alamat Rumah");
+            tabelDataAdmin.setModel(tbl);
+
+            int no = 1;
+            while (rs.next()) {
+                tbl.addRow(new Object[]{rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)});
+            }
+
             JOptionPane.showMessageDialog(null, "Data Admin Ditemukan!");
-            showData();
-            refreshForm();
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
