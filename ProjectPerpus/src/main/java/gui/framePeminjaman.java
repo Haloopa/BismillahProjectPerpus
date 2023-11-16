@@ -407,7 +407,7 @@ public class framePeminjaman extends javax.swing.JFrame {
         try {
             LocalDate tanggalPeminjaman = LocalDate.now();
             LocalDate tanggalJatuhTempo = tanggalPeminjaman.plusDays(5);
-            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String strTanggalPeminjaman = tanggalPeminjaman.format(dateFormat);
             String strTanggalJatuhTempo = tanggalJatuhTempo.format(dateFormat);
             inputTanggalPinjam.setText(strTanggalPeminjaman);
