@@ -452,6 +452,22 @@ public class framePengembalian extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Gagal menambahkan data ke tabel pengembalian", "Pesan", JOptionPane.INFORMATION_MESSAGE);
             }
         }
+        
+        // untuk hapus data peminjaman
+            try {
+            
+            String queryHapus = "DELETE FROM peminjaman WHERE namaAnggota = ? AND judulBuku = ?";
+            PreparedStatement statement = connect.prepareStatement(queryHapus);
+            
+            statement.setString(1, idPinjam);
+            statement.setString(2, judulBuku);
+            statement.executeUpdate();
+
+            
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(framePengembalian.class.getName()).log(Level.SEVERE, null, ex);
+        }
         SimpleDateFormat sdfLabel = new SimpleDateFormat("dd-MM-yyyy");
         
         labelIdAnggota.setText(idAnggota);
