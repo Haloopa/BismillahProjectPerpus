@@ -90,6 +90,24 @@ public class framePengembalian extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        dialogInfoPengembalian = new javax.swing.JDialog();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        labelNama = new javax.swing.JLabel();
+        labelIdAnggota = new javax.swing.JLabel();
+        labelJudulBuku = new javax.swing.JLabel();
+        labelIdBuku = new javax.swing.JLabel();
+        labelTglPinjam = new javax.swing.JLabel();
+        labelTglKembali = new javax.swing.JLabel();
+        labelDenda = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         inputNoUrut = new javax.swing.JTextField();
         inputIdPetugas = new javax.swing.JTextField();
@@ -108,6 +126,96 @@ public class framePengembalian extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         btnClear = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+
+        dialogInfoPengembalian.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel2.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel3.setFont(new java.awt.Font("Century", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 0, 102));
+        jLabel3.setText("DATA PENGEMBALIAN");
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 20, -1, -1));
+
+        jButton1.setText("OK");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 220, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 102));
+        jLabel4.setText("Nama Peminjam");
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 60, -1, -1));
+
+        jLabel5.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 0, 102));
+        jLabel5.setText("ID Anggota ");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 80, -1, -1));
+
+        jLabel6.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 0, 102));
+        jLabel6.setText("Judul Buku");
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 100, -1, -1));
+
+        jLabel7.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(0, 0, 102));
+        jLabel7.setText("ID Buku");
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 120, -1, -1));
+
+        jLabel8.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(0, 0, 102));
+        jLabel8.setText("Tanggal Pinjam");
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 140, -1, -1));
+
+        jLabel9.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(0, 0, 102));
+        jLabel9.setText("Tanggal Kembali");
+        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 160, -1, 20));
+
+        jLabel10.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(0, 0, 102));
+        jLabel10.setText("Denda");
+        jPanel2.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 180, -1, -1));
+
+        labelNama.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        labelNama.setForeground(new java.awt.Color(0, 0, 102));
+        labelNama.setText("jLabel11");
+        jPanel2.add(labelNama, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 60, -1, -1));
+
+        labelIdAnggota.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        labelIdAnggota.setForeground(new java.awt.Color(0, 0, 102));
+        labelIdAnggota.setText("jLabel12");
+        jPanel2.add(labelIdAnggota, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 80, -1, -1));
+
+        labelJudulBuku.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        labelJudulBuku.setForeground(new java.awt.Color(0, 0, 102));
+        labelJudulBuku.setText("jLabel13");
+        jPanel2.add(labelJudulBuku, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 100, -1, -1));
+
+        labelIdBuku.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        labelIdBuku.setForeground(new java.awt.Color(0, 0, 102));
+        labelIdBuku.setText("jLabel14");
+        jPanel2.add(labelIdBuku, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 120, -1, -1));
+
+        labelTglPinjam.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        labelTglPinjam.setForeground(new java.awt.Color(0, 0, 102));
+        labelTglPinjam.setText("jLabel15");
+        jPanel2.add(labelTglPinjam, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 140, -1, -1));
+
+        labelTglKembali.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        labelTglKembali.setForeground(new java.awt.Color(0, 0, 102));
+        labelTglKembali.setText("jLabel16");
+        jPanel2.add(labelTglKembali, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 160, -1, -1));
+
+        labelDenda.setFont(new java.awt.Font("Century", 0, 14)); // NOI18N
+        labelDenda.setForeground(new java.awt.Color(0, 0, 102));
+        labelDenda.setText("jLabel17");
+        jPanel2.add(labelDenda, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 180, -1, -1));
+
+        dialogInfoPengembalian.getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 460, 270));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -307,6 +415,7 @@ public class framePengembalian extends javax.swing.JFrame {
             if (resultSet.next()) {
                 tglPinjam = resultSet.getDate("tanggalPinjam");
                 System.out.println("Tanggal Pinjam: " + sdf.format(tglPinjam));
+                
             } else {
                 System.out.println("Data tidak ditemukan");
                 JOptionPane.showMessageDialog(this, "Data tidak Valid", "Pesan", JOptionPane.INFORMATION_MESSAGE);
@@ -317,6 +426,7 @@ public class framePengembalian extends javax.swing.JFrame {
 
         long hariPinjam = TimeUnit.DAYS.convert(tglKembali.getTime() - tglPinjam.getTime(), TimeUnit.MILLISECONDS);
         int denda = (hariPinjam > 5) ? (int) ((hariPinjam - 5) * 5000) : 0;
+        
 
         String idKembali = "PL" + tglKembaliId + inputNoUrut.getText();
 
@@ -342,6 +452,34 @@ public class framePengembalian extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Gagal menambahkan data ke tabel pengembalian", "Pesan", JOptionPane.INFORMATION_MESSAGE);
             }
         }
+        
+        // untuk hapus data peminjaman
+            try {
+            
+            String queryHapus = "DELETE FROM peminjaman WHERE namaAnggota = ? AND judulBuku = ?";
+            PreparedStatement statement = connect.prepareStatement(queryHapus);
+            
+            statement.setString(1, idPinjam);
+            statement.setString(2, judulBuku);
+            statement.executeUpdate();
+
+            
+            statement.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(framePengembalian.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        SimpleDateFormat sdfLabel = new SimpleDateFormat("dd-MM-yyyy");
+        
+        labelIdAnggota.setText(idAnggota);
+        labelDenda.setText(String.valueOf(denda));
+        labelIdBuku.setText(idBuku);
+        labelJudulBuku.setText(judulBuku);
+        labelNama.setText(namaAnggota);
+        labelTglKembali.setText(sdfLabel.format(tglKembali));
+        labelTglPinjam.setText(sdfLabel.format(tglPinjam));
+        
+        dialogInfoPengembalian.setSize(459, 300);
+        dialogInfoPengembalian.setVisible(true);
 
     } catch (ParseException | SQLException ex) {
            
@@ -461,6 +599,7 @@ public class framePengembalian extends javax.swing.JFrame {
         }
         SimpleDateFormat sdfid = new SimpleDateFormat("ddMM");
         String tglKembaliId = sdfid.format(tglKembali);
+        
 
         String idKembali = "PL" + tglKembaliId + inputNoUrut.getText();
 
@@ -499,6 +638,11 @@ public class framePengembalian extends javax.swing.JFrame {
         inputIdPinjam.setText(kosong);
         TanggalKembali.setText(kosong);
     }//GEN-LAST:event_btnClearActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        dialogInfoPengembalian.setVisible(false);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -543,6 +687,7 @@ public class framePengembalian extends javax.swing.JFrame {
     private javax.swing.JButton btnKeluar;
     private javax.swing.JButton btnTambah;
     private javax.swing.JButton btnUbah;
+    private javax.swing.JDialog dialogInfoPengembalian;
     private javax.swing.JTextField inputIdAnggota;
     private javax.swing.JTextField inputIdBuku;
     private javax.swing.JTextField inputIdPetugas;
@@ -550,10 +695,27 @@ public class framePengembalian extends javax.swing.JFrame {
     private javax.swing.JTextField inputJudulBuku;
     private javax.swing.JTextField inputNamaAnggota;
     private javax.swing.JTextField inputNoUrut;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labelDenda;
+    private javax.swing.JLabel labelIdAnggota;
+    private javax.swing.JLabel labelIdBuku;
+    private javax.swing.JLabel labelJudulBuku;
+    private javax.swing.JLabel labelNama;
+    private javax.swing.JLabel labelTglKembali;
+    private javax.swing.JLabel labelTglPinjam;
     private javax.swing.JTable tabelPengembalian;
     // End of variables declaration//GEN-END:variables
 }
