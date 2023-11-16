@@ -162,6 +162,10 @@ public class frameMenu extends javax.swing.JFrame {
 
     private void btnBukuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBukuActionPerformed
         // TODO add your handling code here:
+        frameBuku buku = new frameBuku();
+        buku.setVisible(true);
+        
+        this.dispose();
     }//GEN-LAST:event_btnBukuActionPerformed
 
     /**
