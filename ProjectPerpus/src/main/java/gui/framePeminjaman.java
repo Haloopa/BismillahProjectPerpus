@@ -21,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
  * @author Asus
  */
 public class framePeminjaman extends javax.swing.JFrame {
+    private int nomorUrut = 1;
     public framePeminjaman() {
         initComponents();
         showData();
@@ -70,6 +71,15 @@ public class framePeminjaman extends javax.swing.JFrame {
                 table.addRow(new Object[] {rs.getString(1), rs.getString(2), rs.getString(3), 
                     rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8) });
             }
+            
+            String sqlGetMaxId = "SELECT MAX(SUBSTRING(idPinjam, 9, 3)) FROM peminjaman";
+            PreparedStatement psMaxId = connect.prepareStatement(sqlGetMaxId);
+            ResultSet rsMaxId = psMaxId.executeQuery();
+
+            if (rsMaxId.next()) {
+                nomorUrut = rsMaxId.getInt(1) + 1;
+            }
+
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
@@ -410,9 +420,15 @@ public class framePeminjaman extends javax.swing.JFrame {
             DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             String strTanggalPeminjaman = tanggalPeminjaman.format(dateFormat);
             String strTanggalJatuhTempo = tanggalJatuhTempo.format(dateFormat);
+            
+            String tanggalBulan = String.format("%02d%02d", tanggalPeminjaman.getDayOfMonth(), tanggalPeminjaman.getMonthValue());
+            String nomorUrutFormatted = String.format("%03d", nomorUrut);
+            String idPinjam = "PJ" + tanggalBulan + nomorUrutFormatted;
+
+            inputIDPinjam.setText(idPinjam);
             inputTanggalPinjam.setText(strTanggalPeminjaman);
             inputJatuhTempo.setText(strTanggalJatuhTempo);
-
+            
             String sql = "INSERT INTO peminjaman VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             ConnectionDatabase koneksiDatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksiDatabase.getConnection();
@@ -429,6 +445,7 @@ public class framePeminjaman extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Data Peminjaman Berhasil Ditambahkan!");
             showData();
             refreshForm();
+            nomorUrut++;
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
