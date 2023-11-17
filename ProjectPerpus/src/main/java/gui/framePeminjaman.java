@@ -453,24 +453,46 @@ public class framePeminjaman extends javax.swing.JFrame {
 
     private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
         try {
-            String sql = "SELECT * FROM peminjaman WHERE idPinjam LIKE '%" + inputPencarian.getText() + "%' OR "
-                    + "idPetugas LIKE '%" + inputIDPetugas.getText() + "%' OR "
-                    + "idAnggota LIKE '%" + inputIDAnggota.getText() + "%' OR "
-                    + "namaAnggota LIKE '%" + inputNamaAnggota.getText() + "%' OR "
-                    + "idBuku LIKE '%" + inputIDBuku.getText() + "%' OR "
-                    + "judulBuku LIKE '%" + inputJudulBuku.getText() + "%' OR "
-                    + "tanggalPinjam LIKE '%" + inputTanggalPinjam.getText() + "%' OR "
-                    + "jatuhTempo LIKE '%" + inputJatuhTempo.getText() + "%'";
+            String sql = "SELECT * FROM peminjaman WHERE idPinjam LIKE ? OR "
+                    + "idPetugas LIKE ? OR "
+                    + "idAnggota LIKE ? OR "
+                    + "namaAnggota LIKE ? OR "
+                    + "idBuku LIKE ? OR "
+                    + "judulBuku LIKE ? OR "
+                    + "tanggalPinjam LIKE ? OR "
+                    + "jatuhTempo LIKE ?";
 
-            
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksidatabase.getConnection();
             PreparedStatement ps = connect.prepareStatement(sql);
-            ps.execute();
-            JOptionPane.showMessageDialog(null, "Data Peminjaman Ditemukan!");
-            showData();
-            refreshForm();
+            for (int i = 1; i <= 8; i++) {
+                ps.setString(i, "%" + inputPencarian.getText() + "%");
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            DefaultTableModel table = new DefaultTableModel();
+            table.addColumn("ID Pinjam");
+            table.addColumn("ID Petugas");
+            table.addColumn("ID Anggota");
+            table.addColumn("Nama Anggota");
+            table.addColumn("ID Buku");
+            table.addColumn("Judul Buku");
+            table.addColumn("Tanggal Pinjam");
+            table.addColumn("Jatuh Tempo");
+            tabelPeminjaman.setModel(table);
+
+            while (rs.next()) {
+                table.addRow(new Object[]{rs.getString(1), rs.getString(2), rs.getString(3),
+                    rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8)});
+            }
+
+            if (table.getRowCount() > 0) {
+                JOptionPane.showMessageDialog(null, "Data Peminjaman Ditemukan!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Data Peminjaman Tidak Ditemukan!");
+            }
+
         } catch (HeadlessException | SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
