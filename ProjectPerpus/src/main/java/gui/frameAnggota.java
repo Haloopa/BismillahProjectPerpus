@@ -420,25 +420,25 @@ public class frameAnggota extends javax.swing.JFrame {
         }
         
 
-        String idAnggota = (String) tabelAnggota.getValueAt(row, 1);
+        String idAnggota = (String) tabelAnggota.getValueAt(row, 0);
         inputIDAnggota.setText(idAnggota);
         
-        String namaAnggota = (String) tabelAnggota.getValueAt(row, 2);
+        String namaAnggota = (String) tabelAnggota.getValueAt(row, 1);
         inputNamaAnggota.setText(namaAnggota);
         
-        String nomor = (String) tabelAnggota.getValueAt(row, 3);
+        String nomor = (String) tabelAnggota.getValueAt(row, 2);
         inputNomor.setText(nomor);
         
-        String prodi = (String) tabelAnggota.getValueAt(row, 4);
+        String prodi = (String) tabelAnggota.getValueAt(row, 3);
         inputProdi.setText(prodi);
         
-        String fakultas = (String) tabelAnggota.getValueAt(row, 5);
+        String fakultas = (String) tabelAnggota.getValueAt(row, 4);
         inputFakultas.setText(fakultas);
         
-        String alamatAnggota = (String) tabelAnggota.getValueAt(row, 6);
+        String alamatAnggota = (String) tabelAnggota.getValueAt(row, 5);
         inputAlamatAnggota.setText(alamatAnggota);
         
-        String tahunMasuk = (String) tabelAnggota.getValueAt(row, 7);
+        String tahunMasuk = (String) tabelAnggota.getValueAt(row, 6);
         inputTahunMasuk.setText(tahunMasuk);
         
         tampilkanData();

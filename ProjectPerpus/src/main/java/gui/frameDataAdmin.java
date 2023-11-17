@@ -375,37 +375,46 @@ public class frameDataAdmin extends javax.swing.JFrame {
 
     private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
         try {
-            String sql = "SELECT * FROM petugas WHERE idPetugas LIKE ? OR namaPetugas LIKE ? OR password LIKE ? OR nomorHP LIKE ? OR alamatPetugas LIKE ?";
-            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
-            Connection connect = koneksidatabase.getConnection();
-            PreparedStatement ps = connect.prepareStatement(sql);
+           String sql = "SELECT * FROM petugas WHERE idPetugas LIKE ? OR namaPetugas LIKE ? OR password LIKE ? OR nomorHP LIKE ? OR alamatPetugas LIKE ?";
+           ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
+           Connection connect = koneksidatabase.getConnection();
+           PreparedStatement ps = connect.prepareStatement(sql);
 
-            // Mengatur parameter dengan menambahkan karakter wildcard (%) ke nilai input
-            ps.setString(1, "%" + inputPencarian.getText() + "%");
-            ps.setString(2, "%" + inputNamaPetugas.getText() + "%");
-            ps.setString(3, "%" + inputPassword.getText() + "%");
-            ps.setString(4, "%" + inputNoHP.getText() + "%");
-            ps.setString(5, "%" + inputAlamatRumah.getText() + "%");
+           // Mengatur parameter dengan menambahkan karakter wildcard (%) ke nilai input
+           String searchValue = "%" + inputPencarian.getText() + "%";
+           for (int i = 1; i <= 5; i++) {
+               ps.setString(i, searchValue);
+           }
 
-            ResultSet rs = ps.executeQuery();
+           ResultSet rs = ps.executeQuery();
 
-            DefaultTableModel tbl = new DefaultTableModel();
-            tbl.addColumn("ID Petugas");
-            tbl.addColumn("Nama Petugas");
-            tbl.addColumn("Password");
-            tbl.addColumn("Nomor HP");
-            tbl.addColumn("Alamat Rumah");
-            tabelDataAdmin.setModel(tbl);
+           DefaultTableModel tbl = new DefaultTableModel();
+           tbl.addColumn("ID Petugas");
+           tbl.addColumn("Nama Petugas");
+           tbl.addColumn("Password");
+           tbl.addColumn("Nomor HP");
+           tbl.addColumn("Alamat Rumah");
+           tabelDataAdmin.setModel(tbl);
 
-            int no = 1;
-            while (rs.next()) {
-                tbl.addRow(new Object[]{rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)});
-            }
+           while (tbl.getRowCount() > 0) {
+               tbl.removeRow(0); // Hapus baris yang ada
+           }
 
-            JOptionPane.showMessageDialog(null, "Data Admin Ditemukan!");
-        } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
+           int rowCount = 0;
+           while (rs.next()) {
+               tbl.addRow(new Object[]{rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)});
+               rowCount++;
+           }
+
+           if (rowCount > 0) {
+               JOptionPane.showMessageDialog(null, "Data Admin Ditemukan!");
+           } else {
+               JOptionPane.showMessageDialog(null, "Data Admin Tidak Ditemukan!", "Perhatian", JOptionPane.WARNING_MESSAGE);
+           }
+
+       } catch (HeadlessException | SQLException e) {
+           JOptionPane.showMessageDialog(this, e.getMessage());
+       }
     }//GEN-LAST:event_btnCariActionPerformed
 
     private void inputPencarianActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputPencarianActionPerformed
