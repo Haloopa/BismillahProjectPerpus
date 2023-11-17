@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
@@ -350,21 +349,24 @@ public class frameBuku extends javax.swing.JFrame {
     private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
         // TODO add your handling code here:
         try {
-            String sql = "UPDATE buku SET idBuku= '" + inputIDBuku.getText()
-                    + "' , judulBuku = '" + inputJudulBuku.getText()
-                    + "' , penulis = '" + inputPenulis.getText()
-                    + "' , penerbit = '" + inputPenerbit.getText() 
-                    + "' , tahunTerbit = '" + inputTahunTerbit.getText() 
-                    + "' , rak = '" + inputRak.getText()
-                    + "' WHERE idBuku = '" + inputIDBuku.getSelectedText() + "'"; 
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
+            String sqlUpdate = "UPDATE buku SET judulBuku = ?, penulis = ?, penerbit = ?, "
+                + "tahunTerbit = ?, rak = ? WHERE idAnggota = ?";
+
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksidatabase.getConnection();
-            PreparedStatement ps = connect.prepareStatement(sql);
-            ps.execute();
+            PreparedStatement ps = connect.prepareStatement(sqlUpdate);
+
+            ps.setString(1, inputJudulBuku.getText());
+            ps.setString(2, inputPenulis.getText());
+            ps.setString(3, inputPenerbit.getText());
+            ps.setString(4, inputTahunTerbit.getText());
+            ps.setString(5, inputRak.getText());
+            ps.setString(6, inputIDBuku.getText());
+
+            ps.executeUpdate();
             JOptionPane.showMessageDialog(null, "Data buku berhasil diubah!");
             kosongkanForm();
-        } catch (HeadlessException | SQLException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_btnUbahActionPerformed
@@ -372,15 +374,18 @@ public class frameBuku extends javax.swing.JFrame {
     private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
         // TODO add your handling code here:
          try {
-            String sql = "DELETE FROM buku WHERE idBuku = '" + inputIDBuku.getText()+ "'"; 
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
+            String sqlDelete = "DELETE FROM buku WHERE idBuku = ?";
+
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksidatabase.getConnection();
-            PreparedStatement ps = connect.prepareStatement(sql);
+            PreparedStatement ps = connect.prepareStatement(sqlDelete);
+
+            ps.setString(1, inputIDBuku.getText());
+
             ps.execute();
             JOptionPane.showMessageDialog(null, "Data buku berhasil dihapus!");
             kosongkanForm();
-        } catch (HeadlessException | SQLException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_btnHapusActionPerformed
@@ -398,39 +403,30 @@ public class frameBuku extends javax.swing.JFrame {
 
     private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
         // TODO add your handling code here:
-        try {
-            String sql = "SELECT * FROM buku WHERE idBuku like '%"
-            + inputCari.getText() + "%'"
-            + " or judulBuku'%" + inputJudulBuku.getText()
-            + "%'" + "penulis'%" + inputPenulis.getText()
-            + "%'" + "penerbit '%" + inputPenerbit.getText()
-            + "%'" + "tahunTerbit '%" + inputTahunTerbit.getText()
-            + "%'" + "rak '%" + inputRak.getText() + "%'";
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
-            Connection connect = koneksidatabase.getConnection();
-            PreparedStatement ps = connect.prepareStatement(sql);
-            ps.execute();
-            JOptionPane.showMessageDialog(null, "Data buku ditemukan!");
-            tampilkanData();
-            kosongkanForm();
-        } catch (HeadlessException | SQLException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
+        tampilkanData(); 
     }//GEN-LAST:event_btnCariActionPerformed
 
     private void btnTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTambahActionPerformed
         // TODO add your handling code here:
         try {
-            String sql = "INSERT INTO buku VALUES ('"+inputIDBuku.getText()+"' , '"+inputJudulBuku.getText()+"' , '"+inputPenulis.getText()+"' , '"+inputPenerbit.getText()+"' , '"+inputTahunTerbit.getText()+"' , '"+inputRak.getText()+"')"; 
-            ConnectionDatabase koneksidatabase;
-            koneksidatabase = ConnectionDatabase.getInstance();
+            String sql = "INSERT INTO buku VALUES (?, ?, ?, ?, ?, ?, )";
+
+            ConnectionDatabase koneksidatabase = ConnectionDatabase.getInstance();
             Connection connect = koneksidatabase.getConnection();
             PreparedStatement ps = connect.prepareStatement(sql);
-            ps.execute();
+
+            ps.setString(1, inputIDBuku.getText());
+            ps.setString(2, inputJudulBuku.getText());
+            ps.setString(4, inputPenulis.getText());
+            ps.setString(3, inputPenerbit.getText());
+            ps.setString(5, inputTahunTerbit.getText());
+            ps.setString(6, inputRak.getText());
+
+            ps.executeUpdate();
+
             JOptionPane.showMessageDialog(null, "Data buku berhasil ditambahkan!");
             kosongkanForm();
-        } catch (HeadlessException | SQLException e) {
+        } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
     }//GEN-LAST:event_btnTambahActionPerformed
@@ -447,22 +443,22 @@ public class frameBuku extends javax.swing.JFrame {
         }
         
 
-       String idBuku = (String) tabelBuku.getValueAt(row, 1);
+       String idBuku = (String) tabelBuku.getValueAt(row, 0);
         inputIDBuku.setText(idBuku);
         
-        String judulBuku = (String) tabelBuku.getValueAt(row, 2);
+        String judulBuku = (String) tabelBuku.getValueAt(row, 1);
         inputJudulBuku.setText(judulBuku);
         
-        String penulis = (String) tabelBuku.getValueAt(row, 3);
+        String penulis = (String) tabelBuku.getValueAt(row, 2);
         inputPenulis.setText(penulis);
         
-        String penerbit = (String) tabelBuku.getValueAt(row, 4);
+        String penerbit = (String) tabelBuku.getValueAt(row, 3);
         inputPenerbit.setText(penerbit);
         
-        String tahunTerbit = (String) tabelBuku.getValueAt(row, 5);
+        String tahunTerbit = (String) tabelBuku.getValueAt(row, 4);
         inputTahunTerbit.setText(tahunTerbit);
         
-        String rak = (String) tabelBuku.getValueAt(row, 6);
+        String rak = (String) tabelBuku.getValueAt(row, 5);
         inputRak.setText(rak);
     }//GEN-LAST:event_tabelBukuMouseClicked
 

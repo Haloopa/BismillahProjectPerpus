@@ -379,7 +379,7 @@ public class frameAnggota extends javax.swing.JFrame {
             kosongkanForm();
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
-    }
+        }
 
     }//GEN-LAST:event_btnUbahActionPerformed
 
